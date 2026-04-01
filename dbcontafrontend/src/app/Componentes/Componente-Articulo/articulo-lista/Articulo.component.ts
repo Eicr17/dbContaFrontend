@@ -1,16 +1,18 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, } from '@angular/core';
-import { catchError } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ArticuloMdl } from '../../../Modelos/ArticuloMdl';
 import { ArticuloService } from '../../../Servicios/articulo.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ArticuloCreacion } from '../../../Modelos/ArticuloCreacionMdl';
 import { TipoArticuloService } from '../../../Servicios/tipo-articulo.service';
 import { TpArticulo } from '../../../Modelos/TipoArticulo';
 import { ArticuloActualizar } from '../../../Modelos/ArticuloActualizarMdl';
 import Swal from 'sweetalert2'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+
+
 declare var bootstrap: any;
 
 
@@ -26,6 +28,7 @@ export class ArticuloComponent {
   FormularioEditar!: FormGroup;
 
   lstArticulo: ArticuloMdl[] = [];
+  lstArticuloOriginal: ArticuloMdl [] = [];
   lstTipoArticulo: TpArticulo[] = [];
   lstArticuloForm: ArticuloCreacion[] = [];
 
@@ -35,10 +38,15 @@ export class ArticuloComponent {
    pagDesde : number =0;
    pagHasta: number=5;
 
+  searchControl = new FormControl('');
+  result: any;
+
+
 
   constructor(private _srvArticulo: ArticuloService,
     private _srvTipoArticulo: TipoArticuloService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dataSerivces: ArticuloService
   ) {
     
   }
@@ -70,18 +78,11 @@ export class ArticuloComponent {
     })
     this.getArticulo();
     this.getTipoArticulo();
+    this.obtenerFiltroId();
 
     
 
   }
-
-
-
-
-
-      
-
-
 
       
   ResetArticulo() {
@@ -137,6 +138,7 @@ export class ArticuloComponent {
       .subscribe((resp) => {
         console.log(resp);
         this.lstArticulo = resp.datos;
+        this.lstArticuloOriginal = resp.datos
 
       })
 
@@ -266,10 +268,24 @@ export class ArticuloComponent {
     console.log(e.pageSize);
     this.pagDesde = e.pageIndex * e.pageSize;
     this.pagHasta =  this.pagDesde + e.pageSize;
-    //console.log(this.pagDesde);
-    //console.log(this.pagHasta);
+
   }
 
 
+  obtenerFiltroId(){
+      this.searchControl.valueChanges.subscribe(valor =>{
+
+          if(valor && valor.trim() !== ''){
+              const BuscarId = Number (valor);
+
+              this.lstArticulo = this.lstArticuloOriginal.filter(a =>
+                a.idArticulo === BuscarId
+              );
+          }else{
+              this.lstArticulo = this.lstArticuloOriginal;
+          }
+
+      });
+  }
       
 }

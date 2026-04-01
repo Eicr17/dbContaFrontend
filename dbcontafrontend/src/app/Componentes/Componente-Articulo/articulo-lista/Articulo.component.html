@@ -1,16 +1,14 @@
 <div class="container">
   <h1 class="text-center">Articulos</h1>
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInsert">
-    Agregar Articulo
-  </button>
 
-   <input 
-      type="text" 
-      class="form-control" 
-      placeholder="Buscar..." 
-      [ngModel]="searchTerm()"
-      (ngModelChange)="searchTerm.set($event)">
+  <div class="text-left  mt-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInsert" >
+      Agregar Articulo
+    </button>
+  </div>
+
+  <div class="mt-3" >
+    <input type="text" class="form-control" placeholder="Buscar Registro por  ID..." [formControl]="searchControl">
   </div>
 
   <div class="col-12 mt-3">
@@ -24,17 +22,12 @@
           <th>FechaCreacion</th>
           <th>Opciones</th>
         </tr>
-
       </thead>
-
       <tbody>
-        
-          
-        
 
-        @for(item of lstArticulo | slice: this.pagDesde : this.pagHasta; track item.idArticulo ) 
-        {   
-          <tr>
+        @for(item of lstArticulo | slice: this.pagDesde : this.pagHasta; track item.idArticulo )
+        {
+        <tr>
           <td>{{item.idArticulo}}</td>
           <td>{{item.idTipoArticulo}}</td>
           <td>{{item.nombre}}</td>
@@ -46,129 +39,116 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
               data-bs-target="#EditModal">Editar</button>
           </td>
-          </tr>
-           }
-        
-
-        
+        </tr>
+        }
       </tbody>
     </table>
 
-    <mat-paginator [length]="lstArticulo.length"
-              [pageSize]="5"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page"
-              (page)="cambiarPagina($event)"
-              >
+    <mat-paginator [length]="lstArticulo.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page" (page)="cambiarPagina($event)">
     </mat-paginator>
 
+  </div>
 
+  <!-- Modal -->
+  <form [formGroup]="FormularioAgregar" (ngSubmit)="ArticuloInsert()">
+    <div class="modal fade" id="ModalInsert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Articulo</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
 
+            <div class="row">
 
+              <div class="col-12">
+                <label for="es">Seleccionar Tipo Articulo</label>
+                <select class="form-select" aria-label="Default select example" formControlName="idTipoArticulo">
+                  <option [ngValue]="null">Selecciona Un Tipo de Articulo</option>
+                  @for(item of lstTipoArticulo; track item.idtipoArticulo){
+                  <option [ngValue]="item.idtipoArticulo">
+                    {{ item.nombre || ('Tipo' + item.idtipoArticulo)}}
+                  </option>
+                  }
+                </select>
 
-</div>
+              </div>
 
-<!-- Modal -->
-<form [formGroup]="FormularioAgregar" (ngSubmit)="ArticuloInsert()">
-  <div class="modal fade" id="ModalInsert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Articulo</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+              <div class="col-12">
+                <label for="es">Ingresar Nombre</label>
+                <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
+                  formControlName="nombre">
+              </div>
 
-          <div class="row">
-
-            <div class="col-12">
-              <label for="es">Seleccionar Tipo Articulo</label>
-              <select class="form-select" aria-label="Default select example" formControlName="idTipoArticulo">
-                <option [ngValue]="null">Selecciona Un Tipo de Articulo</option>
-                @for(item of lstTipoArticulo; track item.idtipoArticulo){
-                <option [ngValue]="item.idtipoArticulo">
-                  {{ item.nombre || ('Tipo' + item.idtipoArticulo)}}
-                </option>
-                }
-              </select>
-
-            </div>
-
-            <div class="col-12">
-              <label for="es">Ingresar Nombre</label>
-              <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
-                formControlName="nombre">
-            </div>
-
-            <div class="col-12">
-              <label for="es">Descripcion</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                formControlName="descripcion"></textarea>
+              <div class="col-12">
+                <label for="es">Descripcion</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                  formControlName="descripcion"></textarea>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Guardar</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
 
 
 
+  <form [formGroup]="FormularioEditar" (ngSubmit)="EditarArticulo()">
+    <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="#EditModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="EditModal">Actualizar Articulo</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
 
+            <div class="row">
 
-<form [formGroup]="FormularioEditar" (ngSubmit)="EditarArticulo()">
-  <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="#EditModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="EditModal">Actualizar Articulo</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+              <div class="col-12">
+                <label for="es">Id A Actualizar</label>
+                <input type="text" class="form-control" placeholder="Id" aria-describedby="basic-addon2"
+                  formControlName="idArticulo">
+              </div>
 
-          <div class="row">
+              <div class="col-12">
+                <label for="es">Seleccionar Tipo Articulo</label>
+                <select class="form-select" aria-label="Default select example" formControlName="idTipoArticulo">
+                  <option selected>Selecciona Un Tipo de Articulo</option>
+                  @for(item of lstTipoArticulo; track item.idtipoArticulo){
+                  <option [ngValue]="item.idtipoArticulo">
+                    {{ item.nombre || ('Tipo' + item.idtipoArticulo)}}
+                  </option>
+                  }
+                </select>
 
-            <div class="col-12">
-              <label for="es">Id A Actualizar</label>
-              <input type="text" class="form-control" placeholder="Id" aria-describedby="basic-addon2"
-                formControlName="idArticulo">
-            </div>
+              </div>
 
-            <div class="col-12">
-              <label for="es">Seleccionar Tipo Articulo</label>
-              <select class="form-select" aria-label="Default select example" formControlName="idTipoArticulo">
-                <option selected>Selecciona Un Tipo de Articulo</option>
-                @for(item of lstTipoArticulo; track item.idtipoArticulo){
-                <option [ngValue]="item.idtipoArticulo">
-                  {{ item.nombre || ('Tipo' + item.idtipoArticulo)}}
-                </option>
-                }
-              </select>
+              <div class="col-12">
+                <label for="es">Ingresar Nuevo Nombre</label>
+                <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
+                  formControlName="nombre">
+              </div>
 
-            </div>
-
-            <div class="col-12">
-              <label for="es">Ingresar Nuevo Nombre</label>
-              <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
-                formControlName="nombre">
-            </div>
-
-            <div class="col-12">
-              <label for="es">Descripcion</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                formControlName="descripcion"></textarea>
+              <div class="col-12">
+                <label for="es">Descripcion</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                  formControlName="descripcion"></textarea>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Guardar</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>

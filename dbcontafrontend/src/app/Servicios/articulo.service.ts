@@ -53,5 +53,11 @@ export class ArticuloService {
    }
 
 
+    ObtenerPorId(id: number)  {
+        return this.http.get<RespuestaMdl<ArticuloMdl>>(
+      `http://localhost:5122/api/Articulo/Obtener?id=${id}` 
+        );
+    }
+
 
 }
