@@ -1,0 +1,128 @@
+<div class="container">
+  <h1 class="text-center">Tipo Articulo</h1>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInsert">
+    Agregar Tipo Articulo
+  </button>
+
+  <div class="mt-2">
+    <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="pCriterioBusqueda"
+      (ngModelChange)="getTipoArticulo()">
+  </div>
+
+  <div class="col-12 mt-3">
+    <table class="table table-bordered border-dark table-hover text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>TipoArticulo</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>FechaCreacion</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(item of lstTipoArticulo | slice: this.pagDesde : this.pagHasta;  track item.idtipoArticulo)
+        {
+        <tr>
+          <td>{{item.idtipoArticulo}}</td>
+          <td>{{item.nombre}}</td>
+          <td>{{item.descripcion}}</td>
+          <td>{{item.fechaCreacion}}</td>
+          <td>
+            <button class="btn btn-danger me-2" (click)="TipoArticuloDelete(item.idtipoArticulo)" type="button">Eliminar</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+              data-bs-target="#EditModal" (click)="EditarTpArticuloValue(item)">Editar</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    
+  </div>
+
+
+  <mat-paginator [length]="lstTipoArticulo.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page" (page)="cambiarPagina($event)">
+    </mat-paginator>
+</div>
+
+
+
+
+<form [formGroup]="FormularioTipoArticulo" (ngSubmit)="TipoArticuloInsert()">
+  <div class="modal fade" id="ModalInsert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Articulo</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+
+            <div class="col-12">
+              <label for="es">Ingresar Nombre</label>
+              <input type="text" class="form-control" placeholder="Tipo Nombre Articulo" aria-describedby="basic-addon2"
+                formControlName="nombre">
+            </div>
+
+            <div class="col-12">
+              <label for="es">Descripcion</label>
+              <textarea class="form-control" id="txtADesc" rows="3" formControlName="descripcion"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<form [formGroup]="FormularioTipoArticulo" (ngSubmit)="TipoArticuloEditar()">
+  <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="#EditModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="EditModal">Actualizar Tipo Articulo</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+
+            <div class="col-12">
+              <label for="es">Id A Actualizar</label>
+              <input type="text" class="form-control" placeholder="Id" aria-describedby="basic-addon2"
+                formControlName="idtipoArticulo" >
+            </div>
+
+            <div class="col-12">
+              <label for="es">Ingresar Nuevo Tipo Nombre Articulo</label>
+              <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
+                formControlName="nombre">
+            </div>
+
+            <div class="col-12">
+              <label for="es">Descripcion</label>
+              <textarea class="form-control" id="txtADesc" rows="3" formControlName="descripcion"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<p>tipo-articulo works!</p>

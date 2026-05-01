@@ -1,0 +1,156 @@
+<div class="container">
+    <h1 class="text-center">Empresas</h1>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInsert" (click)="abrilModal()">
+        Agregar Empresa
+    </button>
+
+
+   <div class="mt-2">
+ <input 
+      type="text" 
+      class="form-control" 
+      placeholder="Buscar..." 
+      [(ngModel)]="pCriterioBusqueda"
+       (ngModelChange)="GetEmpresa()"
+      >
+  </div>
+
+
+    <div class="col-12 mt-3">
+        <table class="table table-bordered border-dark table-hover text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <td>Empresa</td>
+                    <td>Nombre</td>
+                    <td>Nit</td>
+                    <td>Usuario</td>
+                    <td>FechaCreacion</td>
+                    <td>Opciones</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for(item of lstEmpresa | slice: this.pagDesde : this.pagHasta; track item.idempresa)
+                {
+                <tr>
+                    <td>{{item.idempresa}}</td>
+                    <td>{{item.nombre}}</td>
+                    <td>{{item.nit}}</td>
+                    <td>{{item.usuario}}</td>
+                    <td>{{item.fechacreacion}}</td>
+                    <td>
+                        <button class="btn btn-danger me-2" type="button"
+                           (click)="EmpresaEliminar(item.idempresa)" >Eliminar</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                           data-bs-target="#EditModal" (click)="EditarEmpresa(item)">Editar</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+            <mat-paginator [length]="lstEmpresa.length"
+              [pageSize]="5"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              aria-label="Select page"
+              (page)="cambiarPagina($event)"
+              >
+    </mat-paginator>
+    </div>
+
+
+</div>
+<form [formGroup]="FormularioEmpresa" (ngSubmit)="EmpresaInsert()">
+  <div class="modal fade" id="ModalInsert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Empresa</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-12">
+              <label for="es">Ingresar Nombre</label>
+              <input type="text" class="form-control" placeholder="Nombre Empresa" aria-describedby="basic-addon2"
+                formControlName="nombre">
+
+                <div *ngIf="FormularioEmpresa.get('nombre')?.invalid && FormularioEmpresa.get('nombre')?.touched"  class="text-danger" >
+                   El nombre es requerido.
+                </div>
+
+                <div *ngIf="FormularioEmpresa.get('nombre')?.valid"  class="text-success" >
+                   El nombre es valido.
+                </div>
+            </div>
+
+             <div class="col-12">
+              <label for="es">Nit</label>
+              <input type="text" class="form-control" placeholder="Nit " aria-describedby="basic-addon2"
+                formControlName="nit">
+
+                 <div *ngIf="FormularioEmpresa.get('nit')?.invalid && FormularioEmpresa.get('nit')?.touched"  class="text-danger" >
+                   El Nit es requerido.
+                </div>
+
+                <div *ngIf="FormularioEmpresa.get('nit')?.valid"  class="text-success" >
+                   El Nit es valido.
+                </div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<form [formGroup]="FormularioEmpresa" (ngSubmit)="EmpresaActualizar()">
+  <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="#EditModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="EditModal">Actualizar Empresa</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+
+            <div class="col-12">
+              <label for="es">Id A Actualizar</label>
+              <input type="text" class="form-control" placeholder="Id" aria-describedby="basic-addon2"
+                formControlName="idempresa"  > 
+            </div>
+
+    
+
+            <div class="col-12">
+              <label for="es">Ingresar Nuevo Nombre</label>
+              <input type="text" class="form-control" placeholder="Nombre Articulo" aria-describedby="basic-addon2"
+                formControlName="nombre">
+            </div>
+
+            <div class="col-12">
+              <label for="es">Nit</label>
+              <input type="text" class="form-control" placeholder="Nit " aria-describedby="basic-addon2"
+                formControlName="nit">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,60 @@
+<div class="container">
+    <h1 class="text-center">Documento</h1>
+
+</div>
+
+   <div class="mt-2">
+ <input 
+      type="text" 
+      class="form-control" 
+      placeholder="Buscar..." 
+      [(ngModel)]="pCriterioBusqueda"
+       (ngModelChange)="ObtenerDocumento()"
+      > 
+  </div>
+
+<div class="col-12  mt-3">
+    <table class="table table-bordered border-dark table-hover text-center">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Numero</th>
+                <th>Serie</th>
+                <th>TipoDocumento</th>
+                <th>IdEmpresa</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>FechaExpiracion</th>
+                <th>FechaCreacion</th>
+                <th>Opcion</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for(item of lstDocumento; track item.numero + item.serie + item.tipodocumento)
+            {
+            <tr>
+                <td>{{item.numero}}</td>
+                <td>{{item.serie}}</td>
+                <td>{{item.tipodocumento}}</td>
+                <td>{{item.idempresa}}</td>
+                <td>{{item.fecha}}</td>
+                <td>{{item.monto}}</td>
+                <td>{{item.fechaexpiracion}}</td>
+                <td>{{item.fechacreacion}}</td>
+
+
+                <td>
+                    <button class="btn btn-danger me-2" type="button">Eliminar</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#EditModal">Editar</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+
+
+</div>
+

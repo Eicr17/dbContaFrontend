@@ -10,8 +10,11 @@ import {
  } from '@angular/common/http';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
+ import { FormsModule } from '@angular/forms';
+import { loaderInterceptor } from './Interceptores/loader/loader.interceptor';
+import { authInterceptor } from './Interceptores/Auth/auth.interceptor';
  
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), [provideHttpClient()]]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), [provideHttpClient(withInterceptors([loaderInterceptor,authInterceptor]))]]
 };

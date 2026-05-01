@@ -17,10 +17,10 @@ export class ArticuloService {
 
     
  
-   getArticulo()
+   getArticulo(pCriterioBusqueda: string)
    {
       return this.http.get<RespuestaMdl<ArticuloMdl>>(
-       `http://localhost:5122/api/Articulo/Obtener`
+       `http://localhost:5122/api/Articulo/Obtener?pBusqueda=${pCriterioBusqueda}`
       )
 
    }
@@ -46,18 +46,10 @@ export class ArticuloService {
    ArticuloEditar( Act: ArticuloActualizar ): Observable<any>
    {
     
-    return this.http.put<any>(
+    return this.http.post<any>(
       `http://localhost:5122/api/Articulo/Actualizar`,Act
     );
 
    }
-
-
-    ObtenerPorId(id: number)  {
-        return this.http.get<RespuestaMdl<ArticuloMdl>>(
-      `http://localhost:5122/api/Articulo/Obtener?id=${id}` 
-        );
-    }
-
 
 }
